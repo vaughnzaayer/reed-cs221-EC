@@ -175,14 +175,16 @@ ga_search(const Cities& cities,
   auto best_dist = 1e100 + nthread; // Eliminate silly warning
   auto best_ordering = Cities::permutation_t(cities.size());
   auto best_mutex = std::mutex();
-  std::atomic<unsigned> evaluated = 0;
+
+  
 
   auto run_one_thread = [&]() {
-    TournamentDeme deme(&cities, pop_size, mutation_rate);
+
+    TournamentDeme deme(&cities, pop_size/nthread, mutation_rate);
 
     // Evolve the population to make it fitter and keep track of
     // the shortest distance generated
-    for (long i = 1; i <= iters/pop_size; ++i) {
+    for (long i = 1; i <= iters/pop_size/nthread; ++i) {
       deme.compute_next_generation();    // generate next generation
 
       // Find best individual in this population
@@ -225,7 +227,7 @@ int main(int argc, char** argv)
   const auto nthread = (argc > 4)? atoi(argv[4]) : 1;
   const auto granularity = (argc > 5)? atoi(argv[5]) : 100;
 
-  constexpr unsigned NUM_ITER = 9'000'000;
+  constexpr unsigned NUM_ITER = 10'000'000;
   assert(cities.size() > 0 && "Did you actually read the input file successfully?");
 
 
