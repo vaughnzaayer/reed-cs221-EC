@@ -180,11 +180,11 @@ ga_search(const Cities& cities,
 
   auto run_one_thread = [&]() {
 
-    TournamentDeme deme(&cities, pop_size, mutation_rate);
+    TournamentDeme deme(&cities, pop_size/nthread, mutation_rate);
 
     // Evolve the population to make it fitter and keep track of
     // the shortest distance generated
-    for (long i = 1; i <= iters/pop_size/nthread; ++i) {
+    for (long i = 1; i <= iters/pop_size; ++i) {
       deme.compute_next_generation();    // generate next generation
 
       // Find best individual in this population
